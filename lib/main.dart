@@ -56,10 +56,13 @@ Future<void> createIconsFromConfig(Map<String, dynamic> config) async {
   }
 
   if (isNeedingNewAndroidIcon(config)) {
-    android_launcher_icons.createDefaultIcons(config);
+    await android_launcher_icons.createDefaultIcons(config);
   }
   if (hasAndroidAdaptiveConfig(config)) {
     android_launcher_icons.createAdaptiveIcons(config);
+  }
+  if (hasNotificationConfig(config)) {
+    android_launcher_icons.createNotificationIcons(config);
   }
   if (isNeedingNewIOSIcon(config)) {
     ios_launcher_icons.createIcons(config);
@@ -152,6 +155,11 @@ bool hasAndroidAdaptiveConfig(Map<String, dynamic> flutterLauncherIconsConfig) {
   return isNeedingNewAndroidIcon(flutterLauncherIconsConfig) &&
       flutterLauncherIconsConfig.containsKey('adaptive_icon_background') &&
       flutterLauncherIconsConfig.containsKey('adaptive_icon_foreground');
+}
+
+bool hasNotificationConfig(Map<String, dynamic> flutterLauncherIconsConfig) {
+  return isNeedingNewAndroidIcon(flutterLauncherIconsConfig) &&
+      flutterLauncherIconsConfig.containsKey('notification_icon');
 }
 
 bool hasIOSConfig(Map<String, dynamic> flutterLauncherIconsConfig) {
