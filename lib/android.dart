@@ -40,7 +40,9 @@ List<AndroidIconTemplate> androidIcons = <AndroidIconTemplate>[
 Future<void> createDefaultIcons(Map<String, dynamic> flutterLauncherIconsConfig) async {
   print('Creating default icons Android');
   final String filePath = getAndroidIconPath(flutterLauncherIconsConfig);
+  print('filePath: $filePath');
   final Image? image = decodeImage(File(filePath).readAsBytesSync());
+  print('image: $image');
   if (isCustomAndroidFile(flutterLauncherIconsConfig)) {
     print('Adding a new Android launcher icon');
     final String iconName = getNewIconName(flutterLauncherIconsConfig);
