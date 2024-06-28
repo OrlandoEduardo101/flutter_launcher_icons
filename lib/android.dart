@@ -87,18 +87,18 @@ void createAdaptiveIcons(Map<String, dynamic> flutterLauncherIconsConfig) {
   print('Creating adaptive icons Android');
 
   // Retrieve the necessary Flutter Launcher Icons configuration from the yaml file
-  final String backgroundConfig = flutterLauncherIconsConfig['adaptive_icon_background'];
-  final String foregroundImagePath = flutterLauncherIconsConfig['adaptive_icon_foreground'];
-  final Image? foregroundImage = decodeImage(File(foregroundImagePath).readAsBytesSync());
-  final double foregroundScaleFactor = flutterLauncherIconsConfig['adaptive_icon_foreground_scale_factor'];
-  final String foregroundScaleFillColor = flutterLauncherIconsConfig['adaptive_icon_foreground_scale_fill_color'];
+  final String? backgroundConfig = flutterLauncherIconsConfig['adaptive_icon_background'];
+  final String? foregroundImagePath = flutterLauncherIconsConfig['adaptive_icon_foreground'];
+  final Image? foregroundImage = decodeImage(File(foregroundImagePath ?? '').readAsBytesSync());
+  final double? foregroundScaleFactor = flutterLauncherIconsConfig['adaptive_icon_foreground_scale_factor'];
+  final String? foregroundScaleFillColor = flutterLauncherIconsConfig['adaptive_icon_foreground_scale_fill_color'];
 
-  final bool rescale = foregroundScaleFactor > 0;
+  final bool rescale = (foregroundScaleFactor ?? 0) > 0;
 
   Image? rescaledImage;
 
   // Scales the foreground image prior to converting to icon.  This is mainly for scaling down to match adaptive icon spec
-  if (rescale && foregroundScaleFactor > 0) {
+  if (rescale && (foregroundScaleFactor ?? 0) > 0) {
     int _getColorFromHex(String hexColor) {
       //Converts hex string to int
       hexColor = hexColor.toUpperCase().replaceAll('#', '');
@@ -112,8 +112,10 @@ void createAdaptiveIcons(Map<String, dynamic> flutterLauncherIconsConfig) {
     }
 
     if (foregroundImage != null)
-      rescaledImage = rescaleImage(foregroundImage, foregroundScaleFactor,
-          fillColor: foregroundScaleFillColor.isNotEmpty ? _getColorFromHex(foregroundScaleFillColor) : 0);
+      rescaledImage = rescaleImage(foregroundImage, foregroundScaleFactor ?? 0,
+          fillColor: (foregroundScaleFillColor?.isNotEmpty ?? false)
+              ? _getColorFromHex(foregroundScaleFillColor ?? '000000')
+              : 0);
   }
 
   // Create adaptive icon foreground images
@@ -127,19 +129,19 @@ void createAdaptiveIcons(Map<String, dynamic> flutterLauncherIconsConfig) {
   }
 
   // Create adaptive icon background
-  if (isAdaptiveIconConfigPngFile(backgroundConfig)) {
-    createAdaptiveBackgrounds(flutterLauncherIconsConfig, backgroundConfig);
+  if (isAdaptiveIconConfigPngFile(backgroundConfig ?? '')) {
+    createAdaptiveBackgrounds(flutterLauncherIconsConfig, backgroundConfig ?? '');
   } else {
     createAdaptiveIconMipmapXmlFile(flutterLauncherIconsConfig);
-    updateColorsXmlFile(backgroundConfig);
+    updateColorsXmlFile(backgroundConfig ?? '');
   }
 }
 
 void createNotificationIcons(Map<String, dynamic> flutterLauncherIconsConfig) {
   print('Creating adaptive icons Android');
 
-  final String iconName = flutterLauncherIconsConfig['notification_icon'];
-  isAndroidIconNameCorrectFormat(iconName);
+  final String? iconName = flutterLauncherIconsConfig['notification_icon'];
+  isAndroidIconNameCorrectFormat(iconName ?? 'ic_launcher');
 
   // Retrieve the necessary Flutter Launcher Icons configuration from the pubspec.yaml file
   final String foregroundImagePath = flutterLauncherIconsConfig['adaptive_icon_foreground'];
